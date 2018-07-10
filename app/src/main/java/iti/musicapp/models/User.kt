@@ -24,7 +24,7 @@ class User(val artistsDb: Set<Artist>) {
                         compareByDescending<Pair<Style,Int>>{ it.second }
                                 .thenBy { styles[it.first] }
                 )
-                .take(2)
+                .take(2).toMap().keys
 
         return artistsDb.filter { a-> a.styles.intersect(preferedStyles).count()!=0 }.filter { it !in favoriteArtists }
     }
