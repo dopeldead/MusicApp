@@ -2,6 +2,7 @@ package iti.musicapp
 
 import iti.musicapp.models.Artist
 import iti.musicapp.models.Style
+import iti.musicapp.models.User
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -15,6 +16,20 @@ class UserTests {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
+    }
+
+    @Test
+    fun suggest_artist_to_user(){
+
+        val artistList = InitializeArtistsList()
+        val user = User(artistList.toSet())
+
+        user.AddFavorite("Metallica")
+        user.AddFavorite("Duke Ellington")
+
+        var userSuggestion = user.getSuggestions()
+
+        assertEquals(5, userSuggestion.count());
     }
 
     fun InitializeArtistsList(): MutableList<Artist>{
