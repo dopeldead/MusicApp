@@ -6,9 +6,11 @@ class User(val artistsDb: Set<Artist>) {
     private var styles = mutableMapOf<Style,LocalDateTime>()
 
     fun AddFavorite(artist: Artist){
-        if(artist !in favoriteArtists) favoriteArtists.add(artist)
-        for (s in artist.styles){
-            if(s !in styles.keys) styles.put(s, LocalDateTime.now())
+        if(artist !in favoriteArtists){
+            favoriteArtists.add(artist)
+            for (s in artist.styles) {
+                if (s !in styles.keys) styles.put(s, LocalDateTime.now())
+            }
         }
     }
     fun AddFavorite(artistName: String){
@@ -17,6 +19,14 @@ class User(val artistsDb: Set<Artist>) {
         AddFavorite(artist)
     }
     fun getSuggestions(): List<Artist>{
+        /*- retreive Styles (keys) from the style dictionnary
+          - create tuples (Pairs) from <Style, Count of artist from favorites having that style>
+          - Sort by number of time this style is in favorite artists (descending) then by date of first add in favorites
+          - take the 2 firsts
+          - splitting Pairs to <Key,Value> of type <Style,Count>
+          - keep only the Styles(Keys)
+         */
+
 
         val preferedStyles =  styles.keys
                 .map {Pair(it,favoriteArtists.count { a -> a.styles.contains(it) }) }
