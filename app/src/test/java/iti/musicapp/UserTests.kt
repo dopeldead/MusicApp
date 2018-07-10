@@ -27,6 +27,23 @@ class UserTests {
 
         assertEquals(5, userSuggestion.count());
     }
+    @Test
+    fun suggest_artist_to_user_2(){
+
+        val artistList = InitializeArtistsList()
+        val user = User(artistList.toSet())
+
+        user.AddFavorite("Metallica")
+        user.AddFavorite("Rammstein")
+        user.AddFavorite("Tupac")
+        user.AddFavorite("Miles Davis")
+        user.AddFavorite("Duke Ellington")
+
+        var userSuggestion = user.getSuggestions()
+
+        assertEquals(3, userSuggestion.count());
+        assertEquals(userSuggestion.filter { it.styles.contains(Style.RAP) }.count(),0)
+    }
 
     fun InitializeArtistsList(): MutableList<Artist>{
         return mutableListOf<Artist>(
