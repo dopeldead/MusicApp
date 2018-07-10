@@ -1,3 +1,3 @@
 package iti.musicapp.models
 
-data class Artist(val name: String, val style: Set<Style>)
+data class Artist(val name: String, val styles: Set<Style>)

@@ -2,23 +2,27 @@ package iti.musicapp.models
 import java.time.LocalDateTime
 
 class User() {
-    var artists= mapOf<Artist,LocalDateTime>()
+
+    var artists= mutableListOf<Artist>()
+    private var styles = mutableMapOf<Style,LocalDateTime>()
 
     fun AddFavorite(artist: Artist){
-        artists.add(artist, LocalDateTime.now())
+        if(artist !in artists) artists.add(artist)
+        for (s in artist.styles){
+            if(s !in styles.keys) styles.put(s, LocalDateTime.now())
+        }
     }
-    fun RemoveFavorite(artist: Artist){
-        artists.remove(artist)
-    }
-    fun getSuggestions(collection: AbstractCollection<Artist>): Set<Artist>{
 
-        val preferedStyles = artists.groupingBy { it.style }
-                                    .eachCount()
-                                    .toList()
-                                    .sortedBy { (_, value ) -> value}
-                                    .toMap()
-                                    .keys.take(2)
+    fun getSuggestions(collection: AbstractCollection<Artist>): List<Artist>{
 
-        val occurences =  collection.filter { a-> a.style in preferedStyles}.filter { it !in artists }
+        val preferedStyles =  styles.keys
+                .map {Pair(it,artists.count { a -> a.styles.contains(it) }) }
+                .sortedWith(
+                        compareByDescending<Pair<Style,Int>>{ it.second }
+                                .thenBy { styles[it.first] }
+                )
+                .take(2)
+
+        return collection.filter { a-> a.styles.intersect(preferedStyles).count()!=0 }.filter { it !in artists }
     }
 }
